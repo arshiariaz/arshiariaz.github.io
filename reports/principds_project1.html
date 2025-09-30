@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DSC 385 - Project 1 Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Project1_Report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Project1_Report_files/libs/quarto-html/quarto.js"></script>
+<script src="Project1_Report_files/libs/quarto-html/popper.min.js"></script>
+<script src="Project1_Report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Project1_Report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Project1_Report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Project1_Report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Project1_Report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Project1_Report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Project1_Report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DSC 385 - Project 1 Report</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="name-and-eid" class="level2">
+<h2 class="anchored" data-anchor-id="name-and-eid">Name and EID</h2>
+<p>Arshia Riaz (ar65892)</p>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading all the data files</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## DO NOT CHANGE THIS CODE</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>championships <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_championships.tsv.bz2"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>competitions <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Competitions.tsv.bz2"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>continents <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Continents.tsv.bz2"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>countries <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Countries.tsv.bz2"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>eligible_country_iso2s_for_championship <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_eligible_country_iso2s_for_championship.tsv.bz2"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>events <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Events.tsv.bz2"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>formats <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Formats.tsv.bz2"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>persons <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Persons.tsv.bz2"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>ranksaverage <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_RanksAverage_333.tsv.bz2"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>rankssingle <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_RanksSingle_333.tsv.bz2"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Results_333.tsv.bz2"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>roundtypes <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_RoundTypes.tsv.bz2"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>scrambles <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"WCA_export_Scrambles.tsv.bz2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="required-questions" class="level2">
+<h2 class="anchored" data-anchor-id="required-questions">Required Questions</h2>
+<section id="active-speed-cubers" class="level3">
+<h3 class="anchored" data-anchor-id="active-speed-cubers">Active Speed Cubers</h3>
+<p>How many active (3x3x3) speedcubers are there registered with the WCA?</p>
+<p>For this question an <em>active speeedcuber</em> is defined as any person registered in the WCA who has competed in at least two competitions in the years 2022–2024.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter competitions from 2022-2024</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>competitions_recent <span class="ot">&lt;-</span> competitions <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2022</span> <span class="sc">&amp;</span> year <span class="sc">&lt;=</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, year)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Join with results to get relevant competitions</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>active_cubers <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(competitions_recent, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(personId) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">num_competitions =</span> <span class="fu">n_distinct</span>(competitionId)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(num_competitions <span class="sc">&gt;=</span> <span class="dv">2</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of active cubers</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>num_active_cubers <span class="ot">&lt;-</span> <span class="fu">nrow</span>(active_cubers)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of active speedcubers:"</span>, num_active_cubers))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Number of active speedcubers: 39482"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> There are 39,482 active speedcubers registered with the WCA who have competed in at least two competitions between 2022 and 2024.</p>
+</section>
+<section id="world-records" class="level3">
+<h3 class="anchored" data-anchor-id="world-records">World Records</h3>
+<p>This question has two parts:</p>
+<ol type="1">
+<li>According to the data, who holds the world record single best solve? On what date was this record set?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Current world record holder</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the current world record (fastest single solve)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>current_record <span class="ot">&lt;-</span> rankssingle <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(best) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Get person's name for current record holder</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>current_holder <span class="ot">&lt;-</span> persons <span class="sc">%&gt;%</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">==</span> current_record<span class="sc">$</span>personId) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the current record holder</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Current world record holder:"</span>, current_holder<span class="sc">$</span>name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Current world record holder: Max Park"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Record time:"</span>, current_record<span class="sc">$</span>best<span class="sc">/</span><span class="dv">100</span>, <span class="st">"seconds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Record time: 3.13 seconds"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> According to the data, Max Park holds the world record single best solve with a time of 3.13 seconds.</p>
+<p>On what date was this record set?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the competition where the world record was set</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>current_record_comp <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(personId <span class="sc">==</span> current_record<span class="sc">$</span>personId, best <span class="sc">==</span> current_record<span class="sc">$</span>best) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(competitionId) <span class="sc">%&gt;%</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(competitions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>current_record_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  current_record_comp<span class="sc">$</span>year[<span class="dv">1</span>], </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  current_record_comp<span class="sc">$</span>month[<span class="dv">1</span>], </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  current_record_comp<span class="sc">$</span>day[<span class="dv">1</span>], </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep=</span><span class="st">"-"</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the date of the current world record</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Record date:"</span>, current_record_date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Record date: 2023-06-11"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> This record was set on June 11, 2023.</p>
+<ol start="2" type="1">
+<li>According to the data, who previously held the world record best single solve?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the second fastest solve (previous world record)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>previous_record <span class="ot">&lt;-</span> rankssingle <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(best) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">2</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get person's name for previous record holder</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>previous_holder <span class="ot">&lt;-</span> persons <span class="sc">%&gt;%</span> </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">==</span> previous_record<span class="sc">$</span>personId) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the previous record holder</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Previous world record holder:"</span>, previous_holder<span class="sc">$</span>name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Previous world record holder: Luke Garrett"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Previous record time:"</span>, previous_record<span class="sc">$</span>best<span class="sc">/</span><span class="dv">100</span>, <span class="st">"seconds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Previous record time: 3.44 seconds"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> According to the data, the previous world record for best single solve was held by Luke Garrett with a time of 3.44 seconds.</p>
+<p>On what date was this previous record set?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the competition where the previous record was set</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>previous_record_comp <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(personId <span class="sc">==</span> previous_record<span class="sc">$</span>personId, best <span class="sc">==</span> previous_record<span class="sc">$</span>best) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(competitionId) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(competitions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>previous_record_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  previous_record_comp<span class="sc">$</span>year[<span class="dv">1</span>], </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  previous_record_comp<span class="sc">$</span>month[<span class="dv">1</span>], </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  previous_record_comp<span class="sc">$</span>day[<span class="dv">1</span>], </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sep=</span><span class="st">"-"</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the date of the previous world record</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Previous record date:"</span>, previous_record_date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Previous record date: 2023-07-22"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> This record was set on July 22, 2023.</p>
+<p>NOTE: For these questions, consider all speedcubers (not just active ones) and define “best” as the fastest time for a single solve (not for an average).</p>
+</section>
+<section id="regional-rankings" class="level3">
+<h3 class="anchored" data-anchor-id="regional-rankings">Regional Rankings</h3>
+<p>This question has two parts:</p>
+<ol type="1">
+<li>Amongst all speedcubers, who is the top ranked male speedcuber (for best single solve) in Australia?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Join persons data to get gender &amp; country</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ranks_with_details <span class="ot">&lt;-</span> rankssingle <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(persons, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"personId"</span> <span class="ot">=</span> <span class="st">"id"</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Top male in Australia</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>top_male_aus <span class="ot">&lt;-</span> ranks_with_details <span class="sc">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(countryId <span class="sc">==</span> <span class="st">"Australia"</span>, gender <span class="sc">==</span> <span class="st">"m"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(best) <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Top Male Speedcuber in Australia:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Top Male Speedcuber in Australia:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(top_male_aus<span class="sc">$</span>name, <span class="st">"with a time of"</span>, top_male_aus<span class="sc">$</span>best<span class="sc">/</span><span class="dv">100</span>, <span class="st">"seconds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Jode Brewster with a time of 3.88 seconds"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> Amongst all speedcubers, the top ranked male speedcuber for best single solve in Australia is Jode Brewster with a time of 3.88 seconds.</p>
+<ol start="2" type="1">
+<li>Amongst all speedcubers, who is the top ranked female speedcuber (for best single solve time) in Europe?</li>
+</ol>
+<p>NOTE: Europe is identified under the <code>continentId</code> column of the <code>countries</code> table.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Top female in Europe</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get European countries - using direct list of European countries</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>european_countries <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"France"</span>, <span class="st">"Germany"</span>, <span class="st">"Spain"</span>, <span class="st">"Italy"</span>, <span class="st">"Ukraine"</span>, <span class="st">"United Kingdom"</span>, <span class="st">"Netherlands"</span>, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Sweden"</span>, <span class="st">"Poland"</span>, <span class="st">"Austria"</span>, <span class="st">"Switzerland"</span>, <span class="st">"Finland"</span>, <span class="st">"Norway"</span>, <span class="st">"Denmark"</span>, </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Belgium"</span>, <span class="st">"Czech Republic"</span>, <span class="st">"Hungary"</span>, <span class="st">"Portugal"</span>, <span class="st">"Romania"</span>, <span class="st">"Greece"</span>, <span class="st">"Ireland"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Latvia"</span>, <span class="st">"Lithuania"</span>, <span class="st">"Estonia"</span>, <span class="st">"Slovenia"</span>, <span class="st">"Croatia"</span>, <span class="st">"Bulgaria"</span>, <span class="st">"Serbia"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Slovakia"</span>, <span class="st">"Luxembourg"</span>, <span class="st">"Moldova"</span>, <span class="st">"Belarus"</span>, <span class="st">"Iceland"</span>, <span class="st">"Malta"</span>, <span class="st">"Cyprus"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Find top female European speedcuber</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>top_female_eu <span class="ot">&lt;-</span> ranks_with_details <span class="sc">%&gt;%</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(countryId <span class="sc">%in%</span> european_countries, gender <span class="sc">==</span> <span class="st">"f"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(best) <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if data was found</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of European female speedcubers found:"</span>, </span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>           <span class="fu">nrow</span>(ranks_with_details <span class="sc">%&gt;%</span> <span class="fu">filter</span>(countryId <span class="sc">%in%</span> european_countries, gender <span class="sc">==</span> <span class="st">"f"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Number of European female speedcubers found: 3882"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Top Female Speedcuber in Europe:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Top Female Speedcuber in Europe:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(top_female_eu<span class="sc">$</span>name, <span class="st">"with a time of"</span>, top_female_eu<span class="sc">$</span>best<span class="sc">/</span><span class="dv">100</span>, <span class="st">"seconds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Magdalena Pabisz with a time of 4.24 seconds"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> Amongst all speedcubers, the top ranked female speedcuber for best single solve time in Europe is Magdalena Pabisz with a time of 4.24 seconds.</p>
+</section>
+<section id="time-until-sub-5" class="level3">
+<h3 class="anchored" data-anchor-id="time-until-sub-5">Time Until Sub-5</h3>
+<p>Having a time below 5 seconds is considered an elite achievement and most speedcubers have to complete a large number of solves before they can obtain a sub-5 second solve.</p>
+<ol type="1">
+<li>For the current top 10 speedcubers in the world (as recorded in the <code>RanksSingle</code> table), on average, how many solves did they have to do before achieving a sub-5 second solve?</li>
+</ol>
+<p><strong>NOTE</strong>: Each round of a competition has 5 solves that should be considered separately when counting the number of solves.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Average solves until sub-5 for top 10</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get top 10 speedcubers</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>top_10_cubers <span class="ot">&lt;-</span> rankssingle <span class="sc">%&gt;%</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(worldRank) <span class="sc">%&gt;%</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to count solves before sub-5 for a given cuber</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>count_solves_before_sub5 <span class="ot">&lt;-</span> <span class="cf">function</span>(pid) {</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get all of this person's solves in chronological order</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  solves <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(personId <span class="sc">==</span> pid) <span class="sc">%&gt;%</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(competitions, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(roundtypes, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"roundTypeId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create proper date column and sort by date and round rank</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">comp_date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep=</span><span class="st">"-"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(comp_date, rank) <span class="sc">%&gt;%</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get all the individual solve values (excluding DNFs)</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(value1, value2, value3, value4, value5)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to vector of individual solve times</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>  all_times <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    solves<span class="sc">$</span>value1, solves<span class="sc">$</span>value2, solves<span class="sc">$</span>value3, </span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    solves<span class="sc">$</span>value4, solves<span class="sc">$</span>value5</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove DNFs (-1 values)</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>  all_times <span class="ot">&lt;-</span> all_times[all_times <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Find index of first sub-5 (under 500 centiseconds)</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>  first_sub5_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(all_times <span class="sc">&lt;</span> <span class="dv">500</span>)[<span class="dv">1</span>]</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return count of solves before first sub-5</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.na</span>(first_sub5_idx)) {</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">length</span>(all_times))  <span class="co"># Never achieved sub-5</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(first_sub5_idx <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to each top cuber</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>solve_counts <span class="ot">&lt;-</span> <span class="fu">sapply</span>(top_10_cubers<span class="sc">$</span>personId, count_solves_before_sub5)</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate average</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>avg_solves_before_sub5 <span class="ot">&lt;-</span> <span class="fu">mean</span>(solve_counts)</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Average solves before sub-5 for top 10 cubers:"</span>, <span class="fu">round</span>(avg_solves_before_sub5)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Average solves before sub-5 for top 10 cubers: 178"</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here.</strong> For the current top 10 speedcubers in the world, on average, they had to complete approximately 178 solves before achieving a sub-5 second solve.</p>
+<ol start="2" type="1">
+<li>For <strong>one</strong> of the top 10 speedcubers make a scatterplot of their individual single solve times vs.&nbsp;the date of the solve, with date on the x-axis and solve time on the y-axis.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Scatter plot for one top cuber</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the first cuber in the top 10</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>selected_cuber <span class="ot">&lt;-</span> top_10_cubers<span class="sc">$</span>personId[<span class="dv">1</span>]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>selected_name <span class="ot">&lt;-</span> persons<span class="sc">$</span>name[persons<span class="sc">$</span>id <span class="sc">==</span> selected_cuber]</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get their solve data with dates</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>one_cuber_data <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(personId <span class="sc">==</span> selected_cuber) <span class="sc">%&gt;%</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(competitions <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, name, year, month, day), </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create proper date column</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep=</span><span class="st">"-"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a column for individual solve times</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, value1, value2, value3, value4, value5) <span class="sc">%&gt;%</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reshape to long format</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"value"</span>),</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"attempt"</span>,</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"time"</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter out DNFs</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(time <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot solve times over time</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(one_cuber_data, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> time<span class="sc">/</span><span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste</span>(<span class="st">"Solve Times Over Time for"</span>, selected_name),</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Competition Date"</span>,</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Solve Time (seconds)"</span></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project1_Report_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="up-and-coming-speed-cubers" class="level3">
+<h3 class="anchored" data-anchor-id="up-and-coming-speed-cubers">Up-and-Coming Speed Cubers</h3>
+<p>Which speed cubers <strong>not</strong> in the top 10,000 (worldwide for single best time) should we keep an eye on for the near future?</p>
+<p>The idea here is to identify “up-and-coming” speedcubers who are not yet achieving elite times. Come up with a list of <strong>five</strong> speedcubers (provide their names and WCA IDs) that you have identified as “up-and-coming”. There is no one way to answer this question and the goal is to provide an analysis of the data that justifies the selection of your five names.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get cubers not in the top 10,000</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>lower_ranked_cubers <span class="ot">&lt;-</span> rankssingle <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(worldRank <span class="sc">&gt;</span> <span class="dv">10000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(personId)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Find their improvement over time</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>upcoming_cubers <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(lower_ranked_cubers, <span class="at">by =</span> <span class="st">"personId"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(competitions <span class="sc">%&gt;%</span> <span class="fu">select</span>(id, year, month, day), </span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"competitionId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create proper date</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep=</span><span class="st">"-"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group by person</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(personId) <span class="sc">%&gt;%</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Only include those with multiple competitions</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">n_distinct</span>(competitionId) <span class="sc">&gt;=</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate metrics</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initial average time (first competition)</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">initial_avg =</span> <span class="fu">first</span>(average[average <span class="sc">&gt;</span> <span class="dv">0</span>]),</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Most recent average time</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">recent_avg =</span> <span class="fu">last</span>(average[average <span class="sc">&gt;</span> <span class="dv">0</span>]),</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Improvement rate (seconds per day)</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">days_active =</span> <span class="fu">as.numeric</span>(<span class="fu">max</span>(date) <span class="sc">-</span> <span class="fu">min</span>(date)),</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">improvement =</span> (initial_avg <span class="sc">-</span> recent_avg) <span class="sc">/</span> days_active,</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Number of competitions</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">num_comps =</span> <span class="fu">n_distinct</span>(competitionId)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter for meaningful improvement</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(improvement), improvement <span class="sc">&gt;</span> <span class="dv">0</span>, days_active <span class="sc">&gt;</span> <span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get top improvers</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(improvement)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Get their details</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>upcoming_cubers_details <span class="ot">&lt;-</span> upcoming_cubers <span class="sc">%&gt;%</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(persons, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"personId"</span> <span class="ot">=</span> <span class="st">"id"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, personId, improvement, num_comps, days_active)</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Up-and-Coming Speed Cubers:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Up-and-Coming Speed Cubers:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(upcoming_cubers_details)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  name                          personId   improvement num_comps days_active
+  &lt;chr&gt;                         &lt;chr&gt;            &lt;dbl&gt;     &lt;int&gt;       &lt;dbl&gt;
+1 Daniel De Falco               2022FALC02        169.         3          61
+2 Aidan Madden                  2019MADD03        151.         3         133
+3 Karla Matus Bravo             2018BRAV01        141.         4          84
+4 Hsien-Chun Lin (林憲君)       2023LINH09        125.         3          83
+5 Victor Emanuel Oliveira Pinto 2013OLIV12        123.         4          63</code></pre>
+</div>
+</div>
+<p><strong>Write your result here.</strong> Based on the analysis of improvement rates among speedcubers outside the top 10,000 worldwide rankings, I’ve identified five “up-and-coming” speedcubers that show remarkable progress:</p>
+<p>Daniel De Falco (2022FALC02) - Shows an improvement rate of approximately 169 centiseconds per day over 61 days of competition activity, participating in 3 competitions. Aidan Madden (2019MADD03) - Demonstrates an improvement rate of about 151 centiseconds per day across 133 days, competing in 3 different competitions. Karla Matus Bravo (2018BRAV01) - Shows exceptional progress with an improvement rate of 141 centiseconds per day over 84 days, having participated in 4 competitions. Hsien-Chun Lin (林憲君) (2023LINH09) - Demonstrates consistent improvement at a rate of 125 centiseconds per day over 83 days, competing in 3 competitions. Victor Emanuel Oliveira Pinto (2013OLIV12) - Shows a steady improvement rate of 123 centiseconds per day over 63 days, having participated in 4 competitions.</p>
+<p>These speedcubers were selected based on their substantial improvement rates over time, demonstrating their potential to rise in the rankings. Each has competed in at least 3 competitions and shown measurable progress in a relatively short timeframe, suggesting they may be developing the skills necessary to achieve elite times in the future.</p>
+</section>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>In this project, I analyzed data from the World Cube Association to gain insights into speedcubing competitors and their performance. The analysis revealed several interesting findings. I found that there are 39,482 active speedcubers who have competed in at least two competitions between 2022-2024, indicating the widespread popularity of this activity. The current world record of 3.13 seconds is held by Max Park (set on June 11, 2023), while the previous record holder was Luke Garrett with 3.44 seconds (set on July 22, 2023). When examining regional rankings, Jode Brewster emerged as Australia’s top male speedcuber with a time of 3.88 seconds, while Magdalena Pabisz is Europe’s top female speedcuber with a time of 4.24 seconds. The analysis of time until sub-5 second solves revealed that even the world’s top speedcubers needed to complete an average of 178 solves before achieving this elite milestone. The scatter plot for Max Park’s solve times showed his remarkable progression from solve times in the 30+ second range to world-record territory over several years. Finally, by analyzing improvement rates, I identified five promising speedcubers outside the top 10,000 rankings who are showing exceptional progress in a short time period, suggesting they might become competitive at higher levels in the near future. This project presented several challenges, particularly in working with data that required careful joining across multiple tables and creating appropriate metrics to identify improvement patterns. Creating the function to count solves before achieving sub-5 second times required thoughtful handling of the data structure and time sequences.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

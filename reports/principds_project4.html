@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DSC 385 - Project 4 Report</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Project4_Report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Project4_Report_files/libs/quarto-html/quarto.js"></script>
+<script src="Project4_Report_files/libs/quarto-html/popper.min.js"></script>
+<script src="Project4_Report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Project4_Report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Project4_Report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Project4_Report_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Project4_Report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Project4_Report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Project4_Report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DSC 385 - Project 4 Report</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="name-and-eid" class="level2">
+<h2 class="anchored" data-anchor-id="name-and-eid">Name and EID</h2>
+<p>Arshia Riaz (ar65892)</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>Right heart catheterization (RHC) is a diagnostic procedure for directly measuring cardiac function in critically ill patients. In an influential study, Connors et al.&nbsp;(1996) studied the effectiveness of RHC with an observational study design. The study collected data on 5735 hospitalized adult patients; 2184 of them are assigned to the experimental treatment, receipt of RHC within 24 hours of admission, and the remaining 3551 assigned to the control condition. The outcome was death at 30 days after admission to the hospital. The goal is to assess the causal effect of RHC (the treatment) on the binary outcome, death at 30 days after admission.</p>
+<p>The dataset provided here is a cleaned version of the original dataset. The treatment variable in the dataset is <code>swang1</code> and the outcome variable is <code>death</code>. To simplify the analysis, we have restricted the data to 20 covariates that have been identified as the top confounders in an ad-hoc exploratory analysis.</p>
+<p>Below is a table describing each of the variables in the dataset:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 48%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable Name</th>
+<th style="text-align: left;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">Age in years</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sex</td>
+<td style="text-align: left;">Male / Female</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cat1</td>
+<td style="text-align: left;">Primary Diagnosis: COPD, Multiple Organ System Failure (MOSF) w/Sepsis, MOSF w/Malignancy, CHF, Coma, Cirrhosis, Lung Cancer, Colon Cancer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cat2</td>
+<td style="text-align: left;">Secondary Diagnosis: MOSF w/Sepsis, Coma, MOSF w/Malignancy, Lung Cancer, Cirrhosis, Colon Cancer</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ca</td>
+<td style="text-align: left;">yes = Cancer localized, no = metastatic</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">death</td>
+<td style="text-align: left;">Death within 30 days after hospital admission</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pafi1</td>
+<td style="text-align: left;">PaO2 / F102 ratio</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wtkilo1</td>
+<td style="text-align: left;">Weight</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">surv2md1</td>
+<td style="text-align: left;">Estimate of probability of surviving 2 months</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dementhx</td>
+<td style="text-align: left;">Dementia, stroke or cerebral infarct, Parkinsons’s disease</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gastr</td>
+<td style="text-align: left;">Gastrointestinal diagnosis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">wblc1</td>
+<td style="text-align: left;">White blood count</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">temp1</td>
+<td style="text-align: left;">Temperature</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">das2d3pc</td>
+<td style="text-align: left;">DASI-Duke Activity Status Index</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">chfhx</td>
+<td style="text-align: left;">Congestive heart failure</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hema</td>
+<td style="text-align: left;">Hematological diagnosis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">chrpulhx</td>
+<td style="text-align: left;">Chronic pulmonary disease, severe pulmonary disease</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cardiohx</td>
+<td style="text-align: left;">Cardiovascular symptoms</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">meta</td>
+<td style="text-align: left;">Metabolic diagnosis</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Load any additional packages that you need here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The following code loads the dataset, removes some unnecessary columns, and converts categorical variables to factors.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in the data and remove unnecessary columns</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dataset <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"rhc-demo.csv"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">col_select =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span>ptid, <span class="sc">-</span>survtime, <span class="sc">-</span>urin1, <span class="sc">-</span>adld3p)) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), factor)) <span class="sc">|&gt;</span> <span class="do">## Convert to factors</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(death<span class="sc">:</span>chrpulhx, factor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 5735 Columns: 20
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(8): cat1, cat2, ca, sex, swang1, gastr, meta, hema dbl (12): death, cardiohx,
+chfhx, dementhx, chrpulhx, age, surv2md1, das2d3p...
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...1`</code></pre>
+</div>
+</div>
+<p>We can take a quick look at the dataset and all of the variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,735 × 20
+   cat1  cat2  ca    death cardiohx chfhx dementhx chrpulhx   age sex   surv2md1
+   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;    &lt;fct&gt;    &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;
+ 1 COPD  &lt;NA&gt;  Yes   0     0        0     0        1         70.3 Male     0.641
+ 2 MOSF  &lt;NA&gt;  No    1     1        1     0        0         78.2 Fema…    0.755
+ 3 MOSF  MOSF… Yes   0     0        0     0        0         46.1 Fema…    0.317
+ 4 ARF   &lt;NA&gt;  No    1     0        0     0        0         75.3 Fema…    0.441
+ 5 MOSF  &lt;NA&gt;  No    1     0        0     0        0         67.9 Male     0.437
+ 6 COPD  &lt;NA&gt;  No    0     0        1     0        1         86.1 Fema…    0.665
+ 7 MOSF  &lt;NA&gt;  Meta… 0     0        0     0        0         55.0 Male     0.339
+ 8 ARF   Coma  No    1     0        0     0        0         43.6 Male     0.632
+ 9 MOSF  &lt;NA&gt;  Yes   0     0        0     0        0         18.0 Fema…    0.503
+10 ARF   &lt;NA&gt;  Yes   0     0        0     0        0         48.4 Fema…    0.669
+# ℹ 5,725 more rows
+# ℹ 9 more variables: das2d3pc &lt;dbl&gt;, wblc1 &lt;dbl&gt;, temp1 &lt;dbl&gt;, pafi1 &lt;dbl&gt;,
+#   swang1 &lt;fct&gt;, wtkilo1 &lt;dbl&gt;, gastr &lt;fct&gt;, meta &lt;fct&gt;, hema &lt;fct&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dataset <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,735
+Columns: 20
+$ cat1     &lt;fct&gt; COPD, MOSF, MOSF, ARF, MOSF, COPD, MOSF, ARF, MOSF, ARF, ARF,…
+$ cat2     &lt;fct&gt; NA, NA, MOSF w/Sepsis, NA, NA, NA, NA, Coma, NA, NA, NA, NA, …
+$ ca       &lt;fct&gt; Yes, No, Yes, No, No, No, Metastatic, No, Yes, Yes, No, No, N…
+$ death    &lt;fct&gt; 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0…
+$ cardiohx &lt;fct&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…
+$ chfhx    &lt;fct&gt; 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0…
+$ dementhx &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0…
+$ chrpulhx &lt;fct&gt; 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0…
+$ age      &lt;dbl&gt; 70.25098, 78.17896, 46.09198, 75.33197, 67.90997, 86.07794, 5…
+$ sex      &lt;fct&gt; Male, Female, Female, Female, Male, Female, Male, Male, Femal…
+$ surv2md1 &lt;dbl&gt; 0.6409912, 0.7549996, 0.3169999, 0.4409790, 0.4369998, 0.6650…
+$ das2d3pc &lt;dbl&gt; 23.50000, 14.75195, 18.13672, 22.92969, 21.05078, 17.50000, 1…
+$ wblc1    &lt;dbl&gt; 22.09765620, 28.89843750, 0.04999542, 23.29687500, 29.6992188…
+$ temp1    &lt;dbl&gt; 38.69531, 38.89844, 36.39844, 35.79688, 34.79688, 39.19531, 3…
+$ pafi1    &lt;dbl&gt; 68.00000, 218.31250, 275.50000, 156.65625, 478.00000, 184.187…
+$ swang1   &lt;fct&gt; No RHC, RHC, RHC, No RHC, RHC, No RHC, No RHC, No RHC, No RHC…
+$ wtkilo1  &lt;dbl&gt; 64.69995, 45.69998, 0.00000, 54.59998, 78.39996, 54.89999, 0.…
+$ gastr    &lt;fct&gt; No, No, No, No, No, No, No, No, No, Yes, No, No, No, No, No, …
+$ meta     &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No, No, N…
+$ hema     &lt;fct&gt; No, No, No, No, No, No, No, No, Yes, No, No, No, No, No, No, …</code></pre>
+</div>
+</div>
+</section>
+<section id="part-1" class="level2">
+<h2 class="anchored" data-anchor-id="part-1">Part 1</h2>
+<p>Let’s compare the variables in the dataset between the treatment and control groups. The <code>swang1</code> variable indicates whether a person got right heart catheterization (<code>swang1 == RHC</code>) or did not (<code>swang1 == No RHC</code>).</p>
+<p>First take a look at the <strong>numeric</strong> variables in the dataset and compare their means between treatment groups.</p>
+<p>Do the two groups look similar to you based on the means of the numeric variables?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare means of numeric variables between treatment groups</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only numeric variables</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>numeric_vars <span class="ot">&lt;-</span> dataset <span class="sc">%&gt;%</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add treatment column</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>numeric_vars<span class="sc">$</span>swang1 <span class="ot">&lt;-</span> dataset<span class="sc">$</span>swang1</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by treatment and summarize means</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>numeric_summary <span class="ot">&lt;-</span> numeric_vars <span class="sc">%&gt;%</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(swang1) <span class="sc">%&gt;%</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">mean</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Cleaner by rounding</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>numeric_summary <span class="ot">&lt;-</span> numeric_summary <span class="sc">%&gt;%</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="at">digits =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `across(where(is.numeric), round, digits = 2)`.
+Caused by warning:
+! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
+Supply arguments directly to `.fns` through an anonymous function instead.
+
+  # Previously
+  across(a:b, mean, na.rm = TRUE)
+
+  # Now
+  across(a:b, \(x) mean(x, na.rm = TRUE))</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Result</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>numeric_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 8
+  swang1   age surv2md1 das2d3pc wblc1 temp1 pafi1 wtkilo1
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1 No RHC  61.8     0.61     20.4  15.3  37.6  241.    65.0
+2 RHC     60.8     0.57     20.7  16.3  37.6  192.    72.4</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here</strong>. Based on the comparison of means for the numeric variables, there are many differences between the RHC and No RHC groups.</p>
+<p>The most significant difference is in the PaO2/FiO2 ratio (pafi1), which is noticeably lower in the RHC group (192.4) compared to the No RHC group (240.6). Lower values indicate worse oxygenation status. This large difference (approximately 48 points) suggests that patients receiving RHC may have worse baseline respiratory status. Patient weight (wtkilo1) is higher in the RHC group (72.4 kg) compared to the No RHC group (65.0 kg), a difference of about 7.3 kg that could weigh in on both treatment decisions and outcomes. The estimated probability of surviving 2 months (surv2md1) is lower in the RHC group (0.57) compared to the No RHC group (0.61), suggesting doctors chose RHC for patients they thought had poorer prognosis. Age differs only slightly between the two groups, with the RHC group being a year younger (60.8 years vs.&nbsp;61.8 years).</p>
+<p>These distinction show that the two groups are different in terms of baseline characteristics. The RHC group seem to have poorer respiratory function, higher weight, and lower predicted survival probability. These imbalances could potentially influence the relationship between RHC and mortality, as they suggest that RHC was preferably used in sicker patients.</p>
+</section>
+<section id="part-2" class="level2">
+<h2 class="anchored" data-anchor-id="part-2">Part 2</h2>
+<p>Now let’s take a look at some of the other variables. For each of the <strong>factor</strong> variables in the dataset and for each treatment group, compute the proportion of people in the dataset that are equal to the first factor level of the variable.</p>
+<p>NOTE: The <code>levels()</code> function can be used to identify the levels of a factor. For a variables <code>x</code>, the first factor level is <code>levels(x)[1]</code>.</p>
+<p>Which of the factor variables appears to have the largest absolute difference in proportion between the treatment groups?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate proportions for categorical variables by treatment group</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>categorical_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"cat1"</span>, <span class="st">"ca"</span>, <span class="st">"sex"</span>, <span class="st">"gastr"</span>, <span class="st">"meta"</span>, <span class="st">"hema"</span>, </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"cardiohx"</span>, <span class="st">"chfhx"</span>, <span class="st">"dementhx"</span>, <span class="st">"chrpulhx"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize data frame to store results</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>prop_differences <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through each categorical variable</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (var <span class="cf">in</span> categorical_vars) {</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Cross-tabulation of variable by treatment</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  tab <span class="ot">&lt;-</span> <span class="fu">table</span>(dataset[[var]], dataset<span class="sc">$</span>swang1)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Proportions within each treatment group</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  props <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(tab, <span class="at">margin =</span> <span class="dv">2</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># For each level of the variable</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(props)) {</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate absolute difference in proportions</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    diff <span class="ot">&lt;-</span> <span class="fu">abs</span>(props[i, <span class="st">"RHC"</span>] <span class="sc">-</span> props[i, <span class="st">"No RHC"</span>])</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add to results</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    prop_differences <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prop_differences, </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">data.frame</span>(<span class="at">variable =</span> var,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">level =</span> <span class="fu">rownames</span>(props)[i],</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">RHC_prop =</span> props[i, <span class="st">"RHC"</span>],</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">NoRHC_prop =</span> props[i, <span class="st">"No RHC"</span>],</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">abs_diff =</span> diff))</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by absolute difference</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>prop_differences <span class="ot">&lt;-</span> prop_differences[<span class="fu">order</span>(<span class="sc">-</span>prop_differences<span class="sc">$</span>abs_diff), ]</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Display top differences</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(prop_differences, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   variable  level   RHC_prop NoRHC_prop   abs_diff
+5      cat1   MOSF 0.39285714 0.21627711 0.17658004
+4      cat1   COPD 0.02655678 0.11236271 0.08580594
+24 chrpulhx      0 0.85576923 0.78203323 0.07373600
+25 chrpulhx      1 0.14423077 0.21796677 0.07373600
+3      cat1   Coma 0.04349817 0.09602929 0.05253112
+22 dementhx      0 0.93086081 0.88369473 0.04716607
+23 dementhx      1 0.06913919 0.11630527 0.04716607
+11      sex   Male 0.58516484 0.53900310 0.04616174
+10      sex Female 0.41483516 0.46099690 0.04616174
+13    gastr    Yes 0.19230769 0.14700084 0.04530685</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here</strong>. Based on the analysis of categorical variables, the primary diagnosis (cat1) shows the largest absolute difference in proportion between the treatment groups, with Multiple Organ System Failure (MOSF) appearing much more frequently in the RHC group (39.3%) than in the No RHC group (21.6%)—a 17.7% difference. There is also a notable imbalance in COPD diagnosis, where only 2.7% of RHC patients had this condition compared to 11.2% in the control group. Next, 14.4% of RHC patients versus 22.0% of control patients had chronic pulmonary disease status, showcasing a 7.4% difference.</p>
+<p>Additional differences show up in other important categories. Patients with dementia were less frequent in the RHC group (6.9% versus 11.6%), coma was less prevalent among RHC patients (4.3% versus 9.6%), and gender distribution showed interesting findings, with men more likely to receive RHC than women. Males made up 58.5% of the RHC group compared to 53.9% of the control group, while females represented 41.5% of RHC group versus 46.1% of those not receiving the procedure. This difference suggests a potential gender bias in treatment selection decisions.</p>
+<p>These differences showcase a selection bias, where physicians appeared to preferably administer RHC to patients with multiple organ failure while avoiding its use in patients with certain conditions like COPD and dementia.</p>
+</section>
+<section id="part-3" class="level2">
+<h2 class="anchored" data-anchor-id="part-3">Part 3</h2>
+<p>Make a panel of boxplot(s) comparing the numeric variables across treatment groups.</p>
+<p>HINT: If you use the <code>facet_wrap()</code> function, you should set <code>scales = "free_y"</code> to allow for different y-axis scales for the different ranges of the variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Select numeric variables + treatment</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>numeric_vars_long <span class="ot">&lt;-</span> dataset <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(swang1, age, surv2md1, das2d3pc, wblc1, temp1, pafi1, wtkilo1) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>swang1, <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create boxplots</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(numeric_vars_long, <span class="fu">aes</span>(<span class="at">x =</span> swang1, <span class="at">y =</span> value, <span class="at">fill =</span> swang1)) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplots of Numeric Variables by Treatment Group"</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Treatment Group"</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Value"</span>) <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project4_Report_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the boxplots, which numeric variable, appears to have the largest difference between the treatment and control groups?</p>
+<p><strong>Write your answer here</strong>. From the boxplots, the PaO2/FiO2 ratio (pafi1) shows the largest difference between the treatment and control groups. The RHC group has substantially lower values (median around 175-200) compared to the No RHC group (median around 225-250), indicating poorer respiratory function in patients who received RHC. The interquartile range is also noticeably different, and the overall distribution is shifted downward for the RHC group.</p>
+<p>Other variables also show differences, though perhaps less notable. Weight (wtkilo1) demonstrates a difference where RHC patients have higher weights than the control group. White blood cell count (wblc1) shows slightly higher values in the RHC group. The estimated probability of 2-month survival (surv2md1) is somewhat lower in the RHC group. Variables like age, temperature (temp1), and the Duke Activity Status Index (das2d3pc) show minimal differences between groups.</p>
+</section>
+<section id="part-4" class="level2">
+<h2 class="anchored" data-anchor-id="part-4">Part 4</h2>
+<p>Using the <code>MatchIt</code> package, fit a propensity score model using all the predictors <strong>except</strong> the <code>cat2</code> variable (which has too many <code>NA</code> values). The propensity score model should specify a matching ratio of 1:1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1:1 Propensity Score Matching using MatchIt</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>matchit_model <span class="ot">&lt;-</span> <span class="fu">matchit</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  swang1 <span class="sc">~</span> age <span class="sc">+</span> surv2md1 <span class="sc">+</span> das2d3pc <span class="sc">+</span> wblc1 <span class="sc">+</span> temp1 <span class="sc">+</span> pafi1 <span class="sc">+</span> wtkilo1 <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>            sex <span class="sc">+</span> cat1 <span class="sc">+</span> ca <span class="sc">+</span> dementhx <span class="sc">+</span> gastr <span class="sc">+</span> chfhx <span class="sc">+</span> cardiohx <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>            chrpulhx <span class="sc">+</span> hema <span class="sc">+</span> meta, </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataset,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"nearest"</span>,  <span class="co"># nearest neighbor matching</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ratio =</span> <span class="dv">1</span>,           <span class="co"># 1:1 matching</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.action =</span> na.exclude</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of matched sample</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(matchit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+matchit(formula = swang1 ~ age + surv2md1 + das2d3pc + wblc1 + 
+    temp1 + pafi1 + wtkilo1 + sex + cat1 + ca + dementhx + gastr + 
+    chfhx + cardiohx + chrpulhx + hema + meta, data = dataset, 
+    method = "nearest", ratio = 1, na.action = na.exclude)
+
+Summary of Balance for All Data:
+             Means Treated Means Control Std. Mean Diff. Var. Ratio eCDF Mean
+distance            0.4795        0.3201          0.9140     0.9300    0.2377
+age                60.7498       61.7609         -0.0647     0.8175    0.0285
+surv2md1            0.5685        0.6072         -0.1954     1.0663    0.0475
+das2d3pc           20.7008       20.3715          0.0654     0.8429    0.0250
+wblc1              16.2657       15.2635          0.0799     1.2088    0.0190
+temp1              37.5947       37.6329         -0.0209     1.1024    0.0070
+pafi1             192.4334      240.6266         -0.4566     0.8184    0.1115
+wtkilo1            72.3602       65.0402          0.2640     0.8835    0.0661
+sexFemale           0.4148        0.4610         -0.0937          .    0.0462
+sexMale             0.5852        0.5390          0.0937          .    0.0462
+cat1ARF             0.4162        0.4452         -0.0589          .    0.0290
+cat1CHF             0.0957        0.0696          0.0889          .    0.0261
+cat1Coma            0.0435        0.0960         -0.2575          .    0.0525
+cat1COPD            0.0266        0.1124         -0.5337          .    0.0858
+cat1MOSF            0.3929        0.2163          0.3616          .    0.1766
+cat1Other           0.0252        0.0605         -0.2257          .    0.0354
+caMetastatic        0.0563        0.0735         -0.0745          .    0.0172
+caNo                0.7908        0.7468          0.1080          .    0.0439
+caYes               0.1529        0.1797         -0.0743          .    0.0267
+dementhx0           0.9309        0.8837          0.1859          .    0.0472
+dementhx1           0.0691        0.1163         -0.1859          .    0.0472
+gastrNo             0.8077        0.8530         -0.1150          .    0.0453
+gastrYes            0.1923        0.1470          0.1150          .    0.0453
+chfhx0              0.8054        0.8322         -0.0676          .    0.0268
+chfhx1              0.1946        0.1678          0.0676          .    0.0268
+cardiohx0           0.7958        0.8403         -0.1105          .    0.0445
+cardiohx1           0.2042        0.1597          0.1105          .    0.0445
+chrpulhx0           0.8558        0.7820          0.2099          .    0.0737
+chrpulhx1           0.1442        0.2180         -0.2099          .    0.0737
+hemaNo              0.9473        0.9327          0.0656          .    0.0146
+hemaYes             0.0527        0.0673         -0.0656          .    0.0146
+metaNo              0.9574        0.9516          0.0290          .    0.0059
+metaYes             0.0426        0.0484         -0.0290          .    0.0059
+             eCDF Max
+distance       0.3652
+age            0.0703
+surv2md1       0.0957
+das2d3pc       0.0669
+wblc1          0.0561
+temp1          0.0280
+pafi1          0.1816
+wtkilo1        0.1387
+sexFemale      0.0462
+sexMale        0.0462
+cat1ARF        0.0290
+cat1CHF        0.0261
+cat1Coma       0.0525
+cat1COPD       0.0858
+cat1MOSF       0.1766
+cat1Other      0.0354
+caMetastatic   0.0172
+caNo           0.0439
+caYes          0.0267
+dementhx0      0.0472
+dementhx1      0.0472
+gastrNo        0.0453
+gastrYes       0.0453
+chfhx0         0.0268
+chfhx1         0.0268
+cardiohx0      0.0445
+cardiohx1      0.0445
+chrpulhx0      0.0737
+chrpulhx1      0.0737
+hemaNo         0.0146
+hemaYes        0.0146
+metaNo         0.0059
+metaYes        0.0059
+
+Summary of Balance for Matched Data:
+             Means Treated Means Control Std. Mean Diff. Var. Ratio eCDF Mean
+distance            0.4795        0.4230          0.3241     1.3476    0.0778
+age                60.7498       60.8258         -0.0049     0.7887    0.0280
+surv2md1            0.5685        0.5871         -0.0941     0.9669    0.0233
+das2d3pc           20.7008       20.6763          0.0049     0.8558    0.0166
+wblc1              16.2657       15.7489          0.0412     1.1138    0.0110
+temp1              37.5947       37.6522         -0.0314     0.9887    0.0065
+pafi1             192.4334      208.0837         -0.1483     1.0431    0.0411
+wtkilo1            72.3602       69.9547          0.0867     1.0070    0.0295
+sexFemale           0.4148        0.4263         -0.0232          .    0.0114
+sexMale             0.5852        0.5737          0.0232          .    0.0114
+cat1ARF             0.4162        0.4821         -0.1338          .    0.0659
+cat1CHF             0.0957        0.1012         -0.0187          .    0.0055
+cat1Coma            0.0435        0.0568         -0.0651          .    0.0133
+cat1COPD            0.0266        0.0224          0.0256          .    0.0041
+cat1MOSF            0.3929        0.3063          0.1772          .    0.0865
+cat1Other           0.0252        0.0311         -0.0380          .    0.0060
+caMetastatic        0.0563        0.0618         -0.0238          .    0.0055
+caNo                0.7908        0.7688          0.0540          .    0.0220
+caYes               0.1529        0.1694         -0.0458          .    0.0165
+dementhx0           0.9309        0.9190          0.0469          .    0.0119
+dementhx1           0.0691        0.0810         -0.0469          .    0.0119
+gastrNo             0.8077        0.8356         -0.0709          .    0.0279
+gastrYes            0.1923        0.1644          0.0709          .    0.0279
+chfhx0              0.8054        0.8017          0.0093          .    0.0037
+chfhx1              0.1946        0.1983         -0.0093          .    0.0037
+cardiohx0           0.7958        0.7967         -0.0023          .    0.0009
+cardiohx1           0.2042        0.2033          0.0023          .    0.0009
+chrpulhx0           0.8558        0.8544          0.0039          .    0.0014
+chrpulhx1           0.1442        0.1456         -0.0039          .    0.0014
+hemaNo              0.9473        0.9423          0.0226          .    0.0050
+hemaYes             0.0527        0.0577         -0.0226          .    0.0050
+metaNo              0.9574        0.9538          0.0181          .    0.0037
+metaYes             0.0426        0.0462         -0.0181          .    0.0037
+             eCDF Max Std. Pair Dist.
+distance       0.1754          0.3243
+age            0.0650          1.2029
+surv2md1       0.0632          1.1025
+das2d3pc       0.0417          1.1552
+wblc1          0.0357          0.9416
+temp1          0.0224          1.1252
+pafi1          0.0852          0.9772
+wtkilo1        0.0701          1.0177
+sexFemale      0.0114          0.9767
+sexMale        0.0114          0.9767
+cat1ARF        0.0659          0.9233
+cat1CHF        0.0055          0.6164
+cat1Coma       0.0133          0.4467
+cat1COPD       0.0041          0.2535
+cat1MOSF       0.0865          0.7716
+cat1Other      0.0060          0.3302
+caMetastatic   0.0055          0.4687
+caNo           0.0220          0.8375
+caYes          0.0165          0.7455
+dementhx0      0.0119          0.5415
+dementhx1      0.0119          0.5415
+gastrNo        0.0279          0.7494
+gastrYes       0.0279          0.7494
+chfhx0         0.0037          0.7980
+chfhx1         0.0037          0.7980
+cardiohx0      0.0009          0.8178
+cardiohx1      0.0009          0.8178
+chrpulhx0      0.0014          0.6894
+chrpulhx1      0.0014          0.6894
+hemaNo         0.0050          0.4490
+hemaYes        0.0050          0.4490
+metaNo         0.0037          0.4354
+metaYes        0.0037          0.4354
+
+Sample Sizes:
+          Control Treated
+All          3551    2184
+Matched      2184    2184
+Unmatched    1367       0
+Discarded       0       0</code></pre>
+</div>
+</div>
+<p>Make a plot of the absolute standardized mean difference in each predictor variable for both before and after matching is done via the propensity score model.</p>
+<p>NOTE: You can adjust the height of the figure in the HTML output document by setting <code>fig-height</code> to be a larger number.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot standardized mean differences before and after matching</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">summary</span>(matchit_model), <span class="at">var.order =</span> <span class="st">"unmatched"</span>, <span class="at">abs =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project4_Report_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>How would you describe the balance of the covariates between the treatment and control groups in the matched dataset?</p>
+<p><strong>Write your answer here</strong>. Based on the plot of standardized mean differences, the balance of covariates between treatment and control groups in the matched dataset shows substantial statistical improvement. The propensity score matching dramatically improved covariate balance between the RHC and No RHC groups. Before matching, many variables had strong imbalances, with standardized mean differences well above acceptable thresholds. COPD as primary diagnosis (cat1COPD) (0.53), respiratory function ratio (pafi1) (0.46), Multiple Organ System Failure as primary diagnosis (cat1MOSF) (0.36), and patient weight (wtkilo1) (0.26) showed substantial differences between groups.</p>
+<p>After matching, all standardized mean differences were reduced to below 0.2, which is usually considered the threshold for acceptable balance in propensity score analysis. Most variables achieved even better balance with standardized differences below 0.1. The matching process dramatically improved balance for the most problematic variables. COPD as primary diagnosis was substantially more balanced (standardized difference reduced from 0.53 to just 0.03), respiratory function ratio showed marked improvement (from 0.46 to 0.15), Multiple Organ System Failure diagnosis achieved better balance (from 0.36 to 0.18), and patient weight differences were minimized (from 0.26 to 0.09).</p>
+<p>This substantial improvement in balance across all covariates shows that the matched dataset provides a much better foundation for estimating the causal effect of RHC on mortality by reducing potential confounding bias.</p>
+</section>
+<section id="part-5" class="level2">
+<h2 class="anchored" data-anchor-id="part-5">Part 5</h2>
+<p>Create a 1-to-1 matched dataset using the propensity score model that you fit in the previous part. Call the new matched dataset <code>dataset_match</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dataset_match <span class="ot">&lt;-</span> <span class="fu">match.data</span>(matchit_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Run a simple logistic regression using the <code>dataset_match</code> object with the outcome <code>death</code> (death after 30 days from hospital admission) and the treatment variable <code>swang1</code>.</p>
+<p>What is the effect of right heart catheterization on 30-day mortality in these participants?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add your code here</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Logistic regression on matched dataset</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>treatment_effect_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  death <span class="sc">~</span> swang1,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dataset_match,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> binomial</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Model summary</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(treatment_effect_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = death ~ swang1, family = binomial, data = dataset_match)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.49328    0.04410  11.184  &lt; 2e-16 ***
+swang1RHC    0.26234    0.06365   4.122 3.76e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 5652.6  on 4367  degrees of freedom
+Residual deviance: 5635.6  on 4366  degrees of freedom
+AIC: 5639.6
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p><strong>Write your answer here</strong>. After performing logistic regression on the matched dataset, the results show a statistically significant effect of RHC on 30-day mortality.</p>
+<p>The analysis reveals that RHC is linked with increased mortality risk. Specifically, the coefficient for RHC treatment is 0.262 (SE = 0.064, p &lt; 0.0001), with an odds ratio of approximately 1.30. This means that patients who received RHC had approximately 30% higher chances of death within 30 days compared to similar patients who did not undergo the procedure, after adjusting for potential confounding through propensity score matching.</p>
+<p>The intercept coefficient (0.493) represents the log odds of death in the control group (No RHC), which corresponds to a baseline probability of death of approximately 62% in the No RHC group. These findings suggest that right heart catheterization is associated with an increased risk of death at 30 days, even after careful adjustment for many potential confounding variables. The effect size is not only statistically significant but also clinically meaningful. This challenges the assumptions about the benefits of RHC in critically ill patients.</p>
+</section>
+<section id="part-6" class="level2">
+<h2 class="anchored" data-anchor-id="part-6">Part 6</h2>
+<p>Given what you saw in the propensity score analysis above, would you trust the result of this analysis? What potential confounding variables may explain the relationship between RHC and 30-day mortality?</p>
+<p><strong>Write your answer here</strong>. The propensity score matched analysis provides relatively trustworthy evidence for a RHC to have a causal effect on 30-day mortality. The matching process balanced observed covariates between treatment groups and reduced standardized mean differences to acceptable levels below 0.2 in most cases. By including relevant clinical variables and maintaining a sample size of 2,184 matched pairs, the analysis achieved good statistical power. The 30% increase in mortality odds linked with RHC is both statistically significant and clinically meaningful. Thus suggests a substantial impact on patient outcomes.</p>
+<p>Several important limitations are to be considered. Unmeasured confounding factors remain possible despite the extensive covariate adjustment. Factors such as physician expertise, certain institutional practices, and different standards of care may affect treatment selection as well as outcomes but were not present in the dataset. Clinical judgment likely guided RHC use based on certain patient characteristics beyond what was measured, creating potential indication bias. Additionally, the analysis could not account for the exact timing of RHC administration within the 24-hour window, which could correlate with patient acuity.</p>
+<p>Some variables, such as MOSF diagnosis and PaO2/FiO2 ratio, kept standardized differences above 0.1 after matching, suggesting remaining imbalance. The analysis only looked at the average effect of RHC across all patients, which might hide important differences in how the treatment affects different types of patients. Additionally, the data didn’t include information about do-not-resuscitate orders or other treatment limitations, which could have had a major impact on both who receives RHC and mortality, possibly influencing the results.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
