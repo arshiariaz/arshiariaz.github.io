@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,6 +164,7 @@
             color: #ffffff;
             font-weight: 600;
             position: relative;
+            text-align: center;
         }
 
         .section-title::after {
@@ -174,7 +174,8 @@
             height: 3px;
             background: linear-gradient(135deg, #7c77c6, #9333ea);
             bottom: -10px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             border-radius: 2px;
         }
 
@@ -182,10 +183,11 @@
         .about-text {
             color: #b8b4c8;
             font-size: 1.1rem;
-            max-width: 800px;
+            max-width: 1000px;
+            margin: 0 auto;
             line-height: 1.8;
             background: rgba(255, 255, 255, 0.05);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 16px;
             border: 1px solid rgba(120, 119, 198, 0.2);
             backdrop-filter: blur(10px);
@@ -404,10 +406,6 @@
                 flex-direction: column;
                 align-items: center;
             }
-
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -469,7 +467,7 @@
                     <div class="project-type">4 Projects • PyTorch</div>
                     <p>Memory optimization, custom architectures, computer vision, and advanced training techniques.</p>
                     <div class="project-links">
-                        <a href="#" class="project-link">GitHub</a>
+                        <a href="https://github.com/arshiariaz/advanced-deep-learning" class="project-link" target="_blank">GitHub</a>
                     </div>
                 </div>
 
@@ -478,7 +476,7 @@
                     <div class="project-type">4 Projects • Neural Networks</div>
                     <p>CNN implementations, backpropagation, optimization algorithms, and model evaluation.</p>
                     <div class="project-links">
-                        <a href="#" class="project-link">GitHub</a>
+                        <a href="https://github.com/arshiariaz/deep-learning-fundamentals" class="project-link" target="_blank">GitHub</a>
                     </div>
                 </div>
 
@@ -487,7 +485,7 @@
                     <div class="project-type">4 Projects + Research Paper</div>
                     <p>Transformer architectures, text classification, sentiment analysis, and language modeling.</p>
                     <div class="project-links">
-                        <a href="#" class="project-link">GitHub</a>
+                        <a href="https://github.com/arshiariaz/nlp-coursework" class="project-link" target="_blank">GitHub</a>
                         <a href="#" class="project-link">Paper</a>
                     </div>
                 </div>
@@ -551,8 +549,8 @@
             <p style="color: #b8b4c8;">Open to opportunities in data science and machine learning</p>
             <div class="contact-links">
                 <a href="mailto:arshia.riaz@hotmail.com" class="contact-link">Email</a>
-                <a href="#" class="contact-link">LinkedIn</a>
-                <a href="#" class="contact-link">GitHub</a>
+                <a href="https://www.linkedin.com/in/arshia-riaz-99102a220" class="contact-link" target="_blank">LinkedIn</a>
+                <a href="https://github.com/arshiariaz" class="contact-link" target="_blank">GitHub</a>
                 <a href="./Arshia_Riaz_Resume.pdf" class="contact-link" target="_blank">Resume</a>
             </div>
         </section>
