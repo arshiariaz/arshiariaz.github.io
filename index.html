@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arshia Riaz - Full-Stack Engineer & ML Developer</title>
+    <title>Arshia Riaz - Full-Stack ML Developer & Data Scientist</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
         
@@ -15,16 +15,32 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #fafafa;
+            background: linear-gradient(135deg, #fafafa 0%, #fffbf0 100%);
             color: #2c2c2c;
             line-height: 1.6;
         }
 
+        /* Subtle background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(217, 119, 6, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
         header {
-            border-bottom: 1px solid #e5e5e5;
+            border-bottom: 2px solid #f3e8dc;
             position: sticky;
             top: 0;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             z-index: 100;
         }
 
@@ -43,6 +59,10 @@
             letter-spacing: -0.3px;
             color: #2c2c2c;
             text-decoration: none;
+            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .nav-links {
@@ -67,12 +87,12 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: #2c2c2c;
+            background: linear-gradient(90deg, #d97706, #f59e0b);
             transition: width 0.2s;
         }
 
         .nav-links a:hover {
-            color: #2c2c2c;
+            color: #d97706;
         }
 
         .nav-links a:hover::after {
@@ -96,7 +116,10 @@
             font-weight: 700;
             margin-bottom: 1.2rem;
             line-height: 1.15;
-            color: #1a1a1a;
+            background: linear-gradient(135deg, #1a1a1a 0%, #d97706 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
@@ -111,7 +134,7 @@
 
         .cta {
             display: inline-block;
-            background: #2c2c2c;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
             color: white;
             padding: 0.95rem 2rem;
             text-decoration: none;
@@ -122,17 +145,17 @@
             border: none;
             font-size: 0.95rem;
             letter-spacing: 0.3px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
         }
 
         .cta:hover {
-            background: #1a1a1a;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(44, 44, 44, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.3);
         }
 
         section {
             padding: 4.5rem 0;
-            border-top: 1px solid #e5e5e5;
+            border-top: 1px solid #f3e8dc;
         }
 
         .section-title {
@@ -141,6 +164,20 @@
             font-weight: 700;
             margin-bottom: 2.5rem;
             color: #1a1a1a;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+            border-radius: 2px;
         }
 
         .about-text {
@@ -150,6 +187,10 @@
             max-width: 750px;
             margin-left: auto;
             margin-right: auto;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(217, 119, 6, 0.03));
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 3px solid #f59e0b;
         }
 
         .projects {
@@ -168,16 +209,34 @@
 
         .project, .app {
             background: white;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #f3e8dc;
             padding: 2.2rem;
-            border-radius: 4px;
+            border-radius: 8px;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project::before, .app::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d97706, #f59e0b, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .project:hover, .app:hover {
-            border-color: #2c2c2c;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
+            border-color: #f59e0b;
+            box-shadow: 0 12px 32px rgba(217, 119, 6, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .project:hover::before, .app:hover::before {
+            opacity: 1;
         }
 
         .project h3, .app h3 {
@@ -190,7 +249,7 @@
 
         .project-type, .app-tech {
             font-size: 0.8rem;
-            color: #999;
+            color: #d97706;
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -211,30 +270,50 @@
         }
 
         .project-link {
-            color: #2c2c2c;
+            color: #d97706;
             text-decoration: none;
             font-size: 0.85rem;
             padding: 0.6rem 1.2rem;
-            border: 1px solid #2c2c2c;
-            border-radius: 2px;
+            border: 1px solid #d97706;
+            border-radius: 4px;
             transition: all 0.2s;
             font-weight: 500;
             letter-spacing: 0.3px;
+            background: rgba(217, 119, 6, 0.05);
         }
 
         .project-link:hover {
-            background: #2c2c2c;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
             color: white;
-            box-shadow: 0 4px 12px rgba(44, 44, 44, 0.15);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
         }
 
         .category-header {
             font-size: 0.85rem;
             font-weight: 700;
-            color: #999;
+            color: #d97706;
             margin: 3rem 0 1.5rem;
             text-transform: uppercase;
             letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-header::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        .category-header::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #f59e0b, transparent);
         }
 
         .skills-flow {
@@ -246,26 +325,30 @@
         }
 
         .skill {
-            background: white;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
             color: #2c2c2c;
             padding: 0.65rem 1.3rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #f59e0b;
             transition: all 0.2s;
             font-weight: 500;
         }
 
         .skill:hover {
-            background: #2c2c2c;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
             color: white;
-            border-color: #2c2c2c;
+            border-color: #d97706;
             transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(217, 119, 6, 0.2);
         }
 
         .contact {
             text-align: center;
             padding: 4.5rem 0;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.05));
+            border-radius: 12px;
+            margin: 2rem 0;
         }
 
         .contact p {
@@ -282,29 +365,29 @@
         }
 
         .contact-link {
-            color: #2c2c2c;
+            color: white;
             text-decoration: none;
             padding: 0.8rem 1.8rem;
-            border: 1px solid #2c2c2c;
-            border-radius: 2px;
+            border: none;
+            border-radius: 4px;
             transition: all 0.2s;
             font-weight: 500;
             font-size: 0.9rem;
             letter-spacing: 0.3px;
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
         }
 
         .contact-link:hover {
-            background: #2c2c2c;
-            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(44, 44, 44, 0.2);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25);
         }
 
         .badge {
             display: inline-block;
             font-size: 0.7rem;
             padding: 0.35rem 0.7rem;
-            border-radius: 2px;
+            border-radius: 3px;
             margin-left: 0.5rem;
             font-weight: 600;
             letter-spacing: 0.5px;
@@ -363,7 +446,7 @@
 
     <main>
         <section class="hero">
-            <h1>Full-Stack ML Developer & Data Scientist</h1>
+            <h1>Full-Stack ML Developer<br>& Data Scientist</h1>
             <p class="hero-subtitle">Building healthcare technology and machine learning applications. Experienced in product development, cloud architecture, and data-driven solutions.</p>
             <a href="#projects" class="cta">View My Work</a>
         </section>
@@ -486,7 +569,6 @@
 
         <section id="contact" class="contact">
             <h2 class="section-title">Get In Touch</h2>
-            <p>Open to software engineering, machine learning, and consulting opportunities.</p>
             <div class="contact-links">
                 <a href="mailto:arshia.riaz@hotmail.com" class="contact-link">Email</a>
                 <a href="https://www.linkedin.com/in/arshia-riaz-99102a220" class="contact-link" target="_blank">LinkedIn</a>
@@ -519,7 +601,7 @@
         const navLinks = document.querySelectorAll('.nav-links a');
         navLinks.forEach(link => {
             link.addEventListener('mouseenter', function() {
-                this.style.color = '#2c2c2c';
+                this.style.color = '#d97706';
             });
             link.addEventListener('mouseleave', function() {
                 this.style.color = '#666';
@@ -572,12 +654,10 @@
         const ctaButton = document.querySelector('.cta');
         if (ctaButton) {
             ctaButton.addEventListener('mouseenter', function() {
-                this.style.boxShadow = '0 8px 20px rgba(44, 44, 44, 0.2)';
                 this.style.transform = 'translateY(-2px)';
                 this.style.transition = 'all 0.2s ease';
             });
             ctaButton.addEventListener('mouseleave', function() {
-                this.style.boxShadow = 'none';
                 this.style.transform = 'translateY(0)';
             });
         }
@@ -597,7 +677,7 @@
             navLinks.forEach(link => {
                 const href = link.getAttribute('href');
                 if (href.slice(1) === current) {
-                    link.style.color = '#2c2c2c';
+                    link.style.color = '#d97706';
                     link.style.fontWeight = '600';
                 } else {
                     link.style.color = '#666';
@@ -609,7 +689,7 @@
         // Enhanced project link interactions
         document.querySelectorAll('.project-link').forEach(link => {
             link.addEventListener('mouseenter', function() {
-                this.style.boxShadow = '0 4px 12px rgba(44, 44, 44, 0.15)';
+                this.style.boxShadow = '0 4px 12px rgba(217, 119, 6, 0.15)';
             });
             link.addEventListener('mouseleave', function() {
                 this.style.boxShadow = 'none';
@@ -661,10 +741,10 @@
         // Contact link interactions
         document.querySelectorAll('.contact-link').forEach(link => {
             link.addEventListener('mouseenter', function() {
-                this.style.boxShadow = '0 4px 12px rgba(44, 44, 44, 0.2)';
+                this.style.transform = 'translateY(-2px)';
             });
             link.addEventListener('mouseleave', function() {
-                this.style.boxShadow = 'none';
+                this.style.transform = 'translateY(0)';
             });
         });
     </script>
