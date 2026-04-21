@@ -95,6 +95,11 @@
             text-align: center;
         }
 
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
         .hero h1 {
             font-family: 'Merriweather', serif;
             font-size: 3.2rem;
@@ -105,6 +110,7 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.75s ease both;
         }
 
         .hero-subtitle {
@@ -115,6 +121,7 @@
             margin-left: auto;
             margin-right: auto;
             line-height: 1.7;
+            animation: fadeInDown 0.75s ease 0.12s both;
         }
 
         .cta {
@@ -129,6 +136,7 @@
             font-size: 0.95rem;
             letter-spacing: 0.3px;
             box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
+            animation: fadeInDown 0.75s ease 0.25s both;
         }
 
         .cta:hover {
@@ -307,7 +315,7 @@
         /* ── SKILLS ── */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.8rem;
             margin-top: 2rem;
         }
@@ -393,7 +401,8 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .nav-links { display: none; }
-            .projects, .apps, .skills-grid { grid-template-columns: 1fr; }
+            .projects, .apps { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr; }
             .contact-links { flex-direction: column; align-items: center; }
         }
     </style>
@@ -416,14 +425,14 @@
     <main>
         <section class="hero">
             <h1>Full-Stack ML Developer<br>& Data Scientist</h1>
-            <p class="hero-subtitle">Building healthcare technology and machine learning systems end-to-end — from data pipelines and model training to deployed products. MS Data Science, UT Austin. Published researcher.</p>
+            <p class="hero-subtitle">Machine learning engineer and data scientist specializing in healthcare technology and production AI systems. MS Data Science, UT Austin · Google Cloud ML Engineer.</p>
             <a href="#projects" class="cta">View My Work</a>
         </section>
 
         <section id="about">
             <h2 class="section-title">About</h2>
             <p class="about-text">
-                MS Data Science candidate at the University of Texas at Austin with 2+ years of industry experience in healthcare technology. Specializes in end-to-end ML system development, full-stack engineering, and applied data science across healthcare and biomedical domains. Prior experience includes EHR systems consulting at NextGen Healthcare, neuromotor research at the UT Houston Center for Neuromotor and Biomechanics Research, and clinical ophthalmic work. Published in Frontiers in Physiology and IntechOpen. Google Cloud Professional Machine Learning Engineer certified (2026).
+                MS Data Science candidate at the University of Texas at Austin (GPA 3.67) with 2+ years of industry experience in healthcare technology. Specializes in end-to-end ML system development, full-stack engineering, and applied data science across healthcare and biomedical domains. Prior experience includes EHR systems consulting at NextGen Healthcare, neuromotor research at the UT Houston Center for Neuromotor and Biomechanics Research, and clinical ophthalmic work. Published in Frontiers in Physiology and IntechOpen. Google Cloud Professional Machine Learning Engineer certified (2026).
             </p>
         </section>
 
@@ -548,17 +557,28 @@
                 </div>
 
                 <div class="skill-group">
-                    <div class="skill-group-label">Engineering & Cloud</div>
+                    <div class="skill-group-label">Frontend & APIs</div>
                     <div class="skill-tags">
                         <span class="skill">React</span>
                         <span class="skill">Next.js</span>
-                        <span class="skill">Firebase</span>
-                        <span class="skill">GCP / BigQuery</span>
-                        <span class="skill">Vertex AI</span>
+                        <span class="skill">TypeScript</span>
                         <span class="skill">Streamlit</span>
                         <span class="skill">FastAPI</span>
+                        <span class="skill">Flask</span>
+                        <span class="skill">REST APIs</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <div class="skill-group-label">Cloud & Infra</div>
+                    <div class="skill-tags">
+                        <span class="skill">GCP / BigQuery</span>
+                        <span class="skill">Vertex AI</span>
+                        <span class="skill">Firebase</span>
+                        <span class="skill">Vercel</span>
                         <span class="skill">Git</span>
                         <span class="skill">CI/CD</span>
+                        <span class="skill">Docker</span>
                     </div>
                 </div>
 
@@ -634,17 +654,6 @@
             });
         });
 
-        window.addEventListener('load', () => {
-            const style = document.createElement('style');
-            style.textContent = `@keyframes fadeInDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }`;
-            document.head.appendChild(style);
-            const h1  = document.querySelector('.hero h1');
-            const sub = document.querySelector('.hero-subtitle');
-            const btn = document.querySelector('.cta');
-            if (h1)  { h1.style.opacity  = '0'; h1.style.animation  = 'fadeInDown 0.8s ease 0s forwards'; }
-            if (sub) { sub.style.opacity = '0'; sub.style.animation = 'fadeInDown 0.8s ease 0.1s forwards'; }
-            if (btn) { btn.style.opacity = '0'; btn.style.animation = 'fadeInDown 0.8s ease 0.2s forwards'; }
-        });
     </script>
 </body>
 </html>
